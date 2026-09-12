@@ -1,6 +1,14 @@
-'''
-BankAccount should be responsible for managing account state and enforcing account-operation rules such as deposit, withdrawal, and balance.
-'''
+class AccountRepository():
+    def save_to_database(self,account):
+    
+        # Pretend this talks to MySQL
+        print(
+            f"[DB] Saving account {account.account_number} to MySQL..."
+        )
+
+class NotificationService():
+    def send(self, message):
+        print(f"Sending: {message}")
 
 
 class BankAccount:
@@ -167,29 +175,6 @@ class BankAccount:
 
         else:
             return 0.0
-
-    # ----------------------------------------------------
-    # Persistence
-    # ----------------------------------------------------
-
-    def save_to_database(self):
-
-        # Pretend this talks to MySQL
-        print(
-            f"[DB] Saving account {self.account_number} to MySQL..."
-        )
-
-
-    # ----------------------------------------------------
-    # Notification
-    # ----------------------------------------------------
-
-    def send_email(self, recipient, message):
-
-        # Pretend this talks to an SMTP server
-        print(
-            f"[EMAIL] To: {recipient} | {message}"
-        )
 
     # ----------------------------------------------------
     # Statement generation
