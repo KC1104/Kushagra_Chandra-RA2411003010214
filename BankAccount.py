@@ -10,6 +10,22 @@ class NotificationService():
     def send(self, message):
         print(f"Sending: {message}")
 
+class StatementGenerator():
+    def print_statement(self,account):
+    
+            print(
+                f"---- Statement for Account #{account.account_number} "
+                f"({account.name}) ----"
+            )
+    
+            for entry in account.transaction_log:
+                print(entry)
+    
+            print(f"Current Balance: Rs. {account.balance}")
+    
+            print(
+                "-----------------------------------------------------"
+            )
 
 class BankAccount:
 
@@ -65,16 +81,6 @@ class BankAccount:
             f"DEPOSIT: Rs. {amount} | New balance: {self.balance}"
         )
 
-        # Notification responsibility
-        self.send_email(
-            self.name,
-            f"Your deposit of Rs. {amount} was successful. "
-            f"New balance: {self.balance}"
-        )
-
-        # Persistence responsibility
-        self.save_to_database()
-
         return True
 
     def withdraw(self, amount, entered_pin):
@@ -107,14 +113,6 @@ class BankAccount:
             f"WITHDRAW: Rs. {amount} | New balance: {self.balance}"
         )
 
-        self.send_email(
-            self.name,
-            f"Your withdrawal of Rs. {amount} was successful. "
-            f"New balance: {self.balance}"
-        )
-
-        self.save_to_database()
-
         return True
 
     def close_account(self):
@@ -123,13 +121,6 @@ class BankAccount:
             return False
 
         self.status = "Inactive"
-
-        self.send_email(
-            self.name,
-            "Your account has been closed."
-        )
-
-        self.save_to_database()
 
         return True
 
@@ -140,12 +131,6 @@ class BankAccount:
 
         self.status = "Active"
 
-        self.send_email(
-            self.name,
-            "Your account has been reopened."
-        )
-
-        self.save_to_database()
 
         return True
 
@@ -176,25 +161,6 @@ class BankAccount:
         else:
             return 0.0
 
-    # ----------------------------------------------------
-    # Statement generation
-    # ----------------------------------------------------
-
-    def print_statement(self):
-
-        print(
-            f"---- Statement for Account #{self.account_number} "
-            f"({self.name}) ----"
-        )
-
-        for entry in self.transaction_log:
-            print(entry)
-
-        print(f"Current Balance: Rs. {self.balance}")
-
-        print(
-            "-----------------------------------------------------"
-        )
 
     # ----------------------------------------------------
     # Getters
@@ -220,3 +186,29 @@ class BankAccount:
 
     def has_pin(self):
         return self.pin is not None
+
+
+class Main():
+    def run(self):
+
+        db = AccountRepository()
+        notification = NotificationService()
+        statement = StatementGenerator()
+
+        account = BankAccount(101,"Kushagra",19,5000,"Savings")
+
+        db.save_to_database(account)
+        notification.send("Account has been created successfully")
+
+        account.set_pin(1234)
+
+        account.deposit(1000)
+
+        account.withdraw(500, 1234)
+
+        account.deposit(2000)
+
+        statement.print_statement(account)
+
+m=Main()
+m.run()
